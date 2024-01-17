@@ -1,0 +1,104 @@
+#File input/output
+
+import csv
+
+people = []
+
+name = input("What is your name?")
+country = input("Where are you from?")
+
+with open("people.csv", "a") as file:
+  writer = csv.DictWriter(file, fieldnames = ["name", "country"])
+  writer.writerow({"name": name, "country": country})
+
+with open("people.csv", "r") as file:
+  reader = csv.DictReader(file)
+  for row in reader:
+    people.append({"name":row["name"], "country":row["county"])}
+
+for person in sorted(people, key = lambda x: x["name"]):
+    print(f"{person['name']} is from {person['country']}.")
+
+
+# Regular Expressions
+
+import re
+
+phone_number = input("Enter a UK phone number:").strip()
+
+if re.match (r'^\d{11}$', phone_number):
+  print("Valid UK phone number.")
+else:
+  print("Invalid UK phone number.")
+
+
+# OOP
+
+class Animal:
+  def __init__(self, name, species):
+    if not name:
+      raise ValueError("Missing name")
+    if species not in ["Dog", "Cat", "Bird", "Fish"]:
+      raise ValueError("Invalid species")
+    self.name = name
+    self.species = species
+
+def main():
+  pet = get_pet()
+  print (f'"{pet.name}" is a {pet.species}')
+
+def get_pet():
+  name = input("Name: ")
+  species = input("Species: ")
+  return Animal(name, species)
+
+if __name__ == "__main__":
+  main()
+
+
+# Tkinter GUI
+
+from tkinter import *
+from tkinter import ttk
+
+class CelsiusToFahrenheit:
+
+    def __init__(self, root):
+
+        root.title("Celsius to Fahrenheit")
+
+        mainframe = ttk.Frame(root, padding="4 4 12 12")
+        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        root.columnconfigure(0, weight=1)
+        root.rowconfigure(0, weight=1)
+
+        self.celsius = StringVar()
+        celsius_entry = ttk.Entry(mainframe, width=7, textvariable=self.celsius)
+        celsius_entry.grid(column=2, row=1, sticky=(W, E))
+
+        self.fahrenheit = StringVar()
+
+        ttk.Label(mainframe, textvariable=self.fahrenheit).grid(column=2, row=3, sticky=(W, E))
+        ttk.Button(mainframe, text="Convert", command=self.convert).grid(column=3, row=4, sticky=W)
+
+        ttk.Label(mainframe, text="Celsius").grid(column=3, row=1, sticky=W)
+        ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=3, sticky=E)
+        ttk.Label(mainframe, text="Fahrenheit").grid(column=3, row=3, sticky=W)
+
+        for child in mainframe.winfo_children():
+            child.grid_configure(padx=5, pady=5)
+
+        celsius_entry.focus()
+        root.bind("<Return>", self.convert)
+
+    def convert(self, *args):
+        try:
+            celsius_value = float(self.celsius.get())
+            fahrenheit_value = (celsius_value * 9/5) + 32
+            self.fahrenheit.set(f"{fahrenheit_value:.2f} °F")
+        except ValueError:
+            pass
+
+root = Tk()
+CelsiusToFahrenheit(root)
+root.mainloop()
